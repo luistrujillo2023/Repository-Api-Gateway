@@ -1,0 +1,30 @@
+server:
+  port: 8099
+
+eureka:
+  client:
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/ 
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+      - id: m1-service #APODO
+        uri: lb://micro1 #NOMBRE EUREKA
+        predicates:
+        - Path=/m1/**
+        filters:
+        - RewritePath=/m1/(?<x>.*), /$\{x}
+        
+      - id: m2-service
+        uri: lb://micro3
+        predicates:
+        - Path=/m2/**
+        filters:
+        - RewritePath=/m2/(?<path>.*), /$\{path}
+        
